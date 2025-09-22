@@ -4,6 +4,7 @@ import type { Project } from '../types';
 
 interface ProjectGalleryProps {
   filteredProjects: Project[];
+  onAtTop?: (atTop: boolean) => void;
 }
 
 interface ProjectCardProps {
@@ -222,7 +223,7 @@ const MobileCard = ({ project, onClick }: { project: Project; onClick: (p: Proje
   );
 };
 
-const ProjectGallery = ({ filteredProjects }: ProjectGalleryProps) => {
+const ProjectGallery = ({ filteredProjects, onAtTop }: ProjectGalleryProps) => {
   const [scrollY, setScrollY] = useState(0);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -240,6 +241,21 @@ const ProjectGallery = ({ filteredProjects }: ProjectGalleryProps) => {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  // observe when the gallery top reaches near the viewport top and notify parent
+  useEffect(() => {
+    if (!('IntersectionObserver' in window) || !onAtTop) return;
+    const sentinel = document.getElementById('__gallery-top-sentinel');
+    if (!sentinel) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        // when sentinel is not visible (scrolled past) we consider the gallery at top
+        onAtTop(!e.isIntersecting);
+      });
+    }, { root: null, threshold: 0, rootMargin: '-60px 0px 0px 0px' });
+    obs.observe(sentinel);
+    return () => obs.disconnect();
+  }, [onAtTop]);
 
   const handleProjectClick = (project: Project) => {
     setSelectedProject(project);
@@ -269,6 +285,8 @@ const ProjectGallery = ({ filteredProjects }: ProjectGalleryProps) => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* sentinel used by parent to detect when the gallery reaches the top */}
+      <div id="__gallery-top-sentinel" className="w-full h-1 pointer-events-none" />
       {/* 背景装饰 */}
       <div className="absolute inset-0 opacity-3">
         <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-float"></div>

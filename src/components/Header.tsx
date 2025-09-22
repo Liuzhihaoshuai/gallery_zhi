@@ -11,8 +11,8 @@ const Header = ({ activeCategory, onCategoryChange }: HeaderProps) => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* 左上角分类导航 */}
-          <div className="relative">
+          {/* 左上角分类导航 (hidden on small screens; mobile tabs are shown in-page) */}
+          <div className="relative hidden sm:block">
             <nav className="flex items-center space-x-1">
               {categories.map((category) => (
                 <button
