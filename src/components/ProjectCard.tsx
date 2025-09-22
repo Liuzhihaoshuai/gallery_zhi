@@ -11,6 +11,12 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
       className="group cursor-pointer bg-white overflow-hidden transition-all duration-300"
       onClick={onClick}
     >
+      {/* Mobile-only badge above the image to avoid overlapping title */}
+      <div className="px-3 pt-3 sm:hidden">
+        <div className="inline-flex items-center bg-white/90 text-xs text-gray-700 px-2 py-1 rounded-md shadow">
+          {project.images?.length ?? 0} 个项目
+        </div>
+      </div>
       <div className="aspect-[4/3] overflow-hidden bg-gray-100 mb-4">
         <img
           src={project.thumbnail}

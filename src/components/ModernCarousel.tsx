@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { projects } from '../data/projects';
+// projects import not used here; data is passed via props
 import type { Project } from '../types';
 
 interface ModernCarouselProps {
@@ -107,7 +107,7 @@ const ModernCarousel = ({ filteredProjects }: ModernCarouselProps) => {
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={1}
-              onDragEnd={(e, { offset, velocity }) => {
+              onDragEnd={(_event, { offset, velocity }) => {
                 const swipe = swipePower(offset.x, velocity.x);
 
                 if (swipe < -swipeConfidenceThreshold) {
@@ -164,7 +164,7 @@ const ModernCarousel = ({ filteredProjects }: ModernCarouselProps) => {
 
                       {/* 标签 */}
                       <div className="flex flex-wrap gap-2">
-                        {currentProject.tags.map((tag, idx) => (
+                        {(currentProject.tags || []).map((tag, idx) => (
                           <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-lg">
                             {tag}
                           </span>

@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react';
 import Header from '../components/Header';
 import ProjectGallery from '../components/ProjectGallery';
-import ArtworkGrid from '../components/ArtworkGrid';
-import ModernCarousel from '../components/ModernCarousel';
+// ArtworkGrid and ModernCarousel are available but currently unused on the Home page
 import { projects } from '../data/projects';
 
 const Home = () => {

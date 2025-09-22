@@ -1,5 +1,5 @@
-import { useRef, useEffect, useState } from 'react';
-import { artworks, type Artwork } from '../data/artworks';
+import { useEffect, useState } from 'react';
+import { artworks } from '../data/artworks';
 
 const ArtworkGrid = () => {
   const [scrollY, setScrollY] = useState(0);

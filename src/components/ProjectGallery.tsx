@@ -202,15 +202,43 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
   );
 };
 
+const MobileCard = ({ project, onClick }: { project: Project; onClick: (p: Project) => void }) => {
+  return (
+    <div className="bg-white rounded-xl shadow-md overflow-hidden" onClick={() => onClick(project)}>
+      <div className="w-full overflow-hidden">
+        <img src={project.thumbnail} alt={project.title} className="w-full h-auto object-cover block" />
+      </div>
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-xs text-gray-500">{project.category}</span>
+          {project.year && <span className="text-xs text-gray-500">{project.year}</span>}
+        </div>
+        <h3 className="text-sm font-semibold text-gray-900 mb-1">{project.title}</h3>
+        {project.description && (
+          <p className="text-xs text-gray-600 line-clamp-2">{project.description}</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const ProjectGallery = ({ filteredProjects }: ProjectGalleryProps) => {
   const [scrollY, setScrollY] = useState(0);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   const handleProjectClick = (project: Project) => {
@@ -248,17 +276,31 @@ const ProjectGallery = ({ filteredProjects }: ProjectGalleryProps) => {
         <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-pink-500/20 rounded-full blur-3xl animate-float animation-delay-400"></div>
       </div>
 
-      {/* 项目卡片网格 */}
+      {/* 项目卡片区域：移动端瀑布流，桌面端条带 */}
       <div className="relative">
-        {filteredProjects.map((project, index) => (
-          <ProjectCard
-             key={project.id}
-             project={project}
-             index={index}
-             scrollY={scrollY}
-             onClick={handleProjectClick}
-          />
-        ))}
+        {isMobile ? (
+          <div className="w-full px-4 py-6">
+            <div style={{ columnCount: 2, columnGap: '0.75rem' }}>
+              {filteredProjects.map((p) => (
+                <div key={p.id} style={{ breakInside: 'avoid' as any, ['-webkit-column-break-inside' as any]: 'avoid', display: 'inline-block', width: '100%', marginBottom: '0.75rem' }}>
+                  <MobileCard project={p} onClick={handleProjectClick} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="relative">
+            {filteredProjects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+                scrollY={scrollY}
+                onClick={handleProjectClick}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
 
