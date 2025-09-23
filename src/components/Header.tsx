@@ -1,0 +1,48 @@
+import { categories } from '../data/projects';
+
+interface HeaderProps {
+  activeCategory: string;
+  onCategoryChange: (category: string) => void;
+}
+
+const Header = ({ activeCategory, onCategoryChange }: HeaderProps) => {
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* 左上角分类导航 (hidden on small screens; mobile tabs are shown in-page) */}
+          <div className="relative hidden sm:block">
+            <nav className="flex items-center space-x-1">
+              {categories.map((category) => (
+                <button
+                  key={category.value}
+                  onClick={() => onCategoryChange(category.value)}
+                  className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                    activeCategory === category.value
+                      ? 'bg-gray-900 text-white shadow-lg transform scale-105'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          {/* 中央品牌标识 */}
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              Gallery
+            </h1>
+          </div>
+
+          {/* 右侧留空以保持布局平衡 */}
+          <div className="w-20"></div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
