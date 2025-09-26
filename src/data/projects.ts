@@ -84,7 +84,7 @@ export const projects: Project[] = [
     year: 2023,
   },
   {
-    id: '4',
+    id: '4-1',
     title: 'Camel Ride Around The Pyramids',
     category: '插画',
     thumbnail: '/src/assets/4.jpg',
